@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Fibonacci
+namespace Fibonacci.Core
 {
     public partial class TFibonacci
     {

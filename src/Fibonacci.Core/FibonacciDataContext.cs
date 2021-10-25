@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Fibonacci
+namespace Fibonacci.Core
 {
     public partial class FibonacciDataContext : DbContext
     {

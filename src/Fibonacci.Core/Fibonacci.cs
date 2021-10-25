@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fibonacci.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fibonacci
