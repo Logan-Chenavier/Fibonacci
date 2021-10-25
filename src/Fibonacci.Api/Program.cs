@@ -1,25 +1,30 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.IO;
+using Fibonacci;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+IConfiguration configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddEnvironmentVariables()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+var services = new ServiceCollection()
+    .AddDbContext<FibonacciDataContext>(options =>
+        options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")))
+    .AddTransient<Compute>()
+    .AddLogging();
 
-app.UseRouting();
+using var serviceProvider = services.BuildServiceProvider();
 
-app.UseAuthorization();
+var compute = serviceProvider.GetService<Compute>();
 
-app.MapRazorPages();
-//app.get("/Fibonacci", async () => await )
+app.MapGet("/Fibonacci", async () => compute.ExecuteAsync(new[] {"42", "42", "42"}));
 app.Run();
